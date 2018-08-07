@@ -1,0 +1,12 @@
+#cloud-config
+chpasswd: { expire: False }
+password: qwerty
+runcmd:
+ - 'ip link add vxlan0 type vxlan id 12345 dev enp0s3 dstport 0'
+ - 'bridge fdb append to 00:00:00:00:00:00 dst 192.168.124.101 dev vxlan0'
+ - 'ip addr add 10.255.0.102/24 dev vxlan0'
+ - 'ip link set up dev vxlan0'
+
+
+ssh_authorized_keys:
+ - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTTqNNeO4s982NoKqlcEuhIm4LUgwYYvbEYcZkM/2YTne2W5J6HqBTT3uSCeI1SmHWlVxDLyxTlRC5zBXpkS2+F3ZShXnl1cop8dEnf0zg7ZPnIZE5kDSCa6yoohhR0kHvYm3j/PN/PufPGyATvIHW6WZE7FyEg4JJK1UtK7W4DSUUMKS1LCvMwi1JWSi8bIblF5Jxx2/ZJXsb5wimI1m4IIjP/OGit0IL+BLRphV4EJbQbsMYby7b0rr9p/xrc3Pd2D3CyBkBh8aiQyKZmcr+r14TXMHEcz3woOtlGXcvtpePPJsZAKuuk8QR3NUqRsNmSTi6s+2ZYC8mVCQMKV73 stavrovskaya@stavrovskaya-pc

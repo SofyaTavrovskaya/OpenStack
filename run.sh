@@ -7,18 +7,18 @@ envsubst < config > work_config
 source work_config
 export $(cut -d= -f1 work_config| grep -v '^$\|^\s*\#' work_config)
 
-echo "Create directory for config-drives for vm1 and vm2"
-mkdir -p config-drives/$VM1_NAME-config config-drives/$VM2_NAME-config
+echo "Create directory for config-drives for CONTROLLER and COMPUTE"
+mkdir -p config-drives/$CONTROLLER_NAME-config config-drives/$COMPUTE_NAME-config
 
 echo "Download Ubuntu cloud image, if it doesn't exist"
 wget -O /var/lib/libvirt/images/ubuntu-server-16.04.qcow2 -nc $VM_BASE_IMAGE
 
 echo "Create two disks from image"
-cp /var/lib/libvirt/images/ubuntu-server-16.04.qcow2 $VM1_HDD
-cp /var/lib/libvirt/images/ubuntu-server-16.04.qcow2 $VM2_HDD
+cp /var/lib/libvirt/images/ubuntu-server-16.04.qcow2 $CONTROLLER_HDD
+cp /var/lib/libvirt/images/ubuntu-server-16.04.qcow2 $COMPUTE_HDD
 
 echo "Generate MAC adress for external network"
-export MAC_VM1_EXT=52:54:00:`(date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{6}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'`
+export MAC_CONTROLLER_EXT=52:54:00:`(date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{6}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'`
 
 echo "Check if SSH key exists"
 if [ -e $SSH_PUB_KEY ]
@@ -52,35 +52,35 @@ virsh net-start internal
 virsh net-start management
 
 echo "Create meta-data for VMs"
-envsubst < templates/meta-data_VM1_template > config-drives/vm1-config/meta-data
-envsubst < templates/meta-data_VM2_template > config-drives/vm2-config/meta-data
+envsubst < templates/meta-data_CONTROLLER_template > config-drives/CONTROLLER-config/meta-data
+envsubst < templates/meta-data_COMPUTE_template > config-drives/COMPUTE-config/meta-data
 
-echo "Create user-data for VM1"
-envsubst < templates/user-data_VM1_template > config-drives/vm1-config/user-data
-cat <<EOT >> config-drives/vm1-config/user-data
+echo "Create user-data for CONTROLLER"
+envsubst < templates/user-data_CONTROLLER_template > config-drives/CONTROLLER-config/user-data
+cat <<EOT >> config-drives/CONTROLLER-config/user-data
 ssh_authorized_keys:
  - $(cat $SSH_PUB_KEY)
 EOT
 
-echo "Create user-data for VM2"
-envsubst < templates/user-data_VM2_template > config-drives/vm2-config/user-data
-cat <<EOT >> config-drives/vm2-config/user-data
+echo "Create user-data for COMPUTE"
+envsubst < templates/user-data_COMPUTE_template > config-drives/COMPUTE-config/user-data
+cat <<EOT >> config-drives/COMPUTE-config/user-data
 ssh_authorized_keys:
  - $(cat $SSH_PUB_KEY)
 EOT
 
-echo "Create VM1.xml and VM2.xml from template"
-envsubst < templates/vm1_template.xml > vm1.xml
-envsubst < templates/vm2_template.xml > vm2.xml
+echo "Create CONTROLLER.xml and COMPUTE.xml from template"
+envsubst < templates/CONTROLLER_template.xml > CONTROLLER.xml
+envsubst < templates/COMPUTE_template.xml > COMPUTE.xml
 
 echo "Create config drives"
-mkisofs -o "$VM1_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm1-config
-mkisofs -o "$VM2_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm2-config
+mkisofs -o "$CONTROLLER_CONFIG_ISO" -V cidata -r -J --quiet config-drives/CONTROLLER-config
+mkisofs -o "$COMPUTE_CONFIG_ISO" -V cidata -r -J --quiet config-drives/COMPUTE-config
 
 echo "Define VMs from XML templates"
-virsh define vm1.xml
-virsh define vm2.xml
+virsh define CONTROLLER.xml
+virsh define COMPUTE.xml
 
 echo "Start VMs"
-virsh start vm1
-virsh start vm2
+virsh start CONTROLLER
+virsh start COMPUTE

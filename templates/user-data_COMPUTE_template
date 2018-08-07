@@ -1,0 +1,10 @@
+#cloud-config
+chpasswd: { expire: False }
+password: qwerty
+runcmd:
+ - 'ip link add ${VXLAN_IF} type vxlan id ${VID} dev ${COMPUTE_INTERNAL_IF} dstport 0'
+ - 'bridge fdb append to 00:00:00:00:00:00 dst ${CONTROLLER_INTERNAL_IP} dev ${VXLAN_IF}'
+ - 'ip addr add ${COMPUTE_VXLAN_IP}/24 dev ${VXLAN_IF}'
+ - 'ip link set up dev ${VXLAN_IF}'
+
+

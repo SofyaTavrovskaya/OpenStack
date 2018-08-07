@@ -1,5 +1,5 @@
 <domain type='kvm'>
-  <name>vm1</name>
+  <name>CONTROLLER</name>
   <memory unit='MiB'>2048</memory>
   <vcpu placement='static'>1</vcpu>
   <os>
@@ -19,7 +19,7 @@
       <readonly/>
     </disk>
     <interface type='network'>
-      <mac address='52:54:00:fd:fd:bd'/>
+      <mac address='52:54:00:77:1f:60'/>
       <source network='external'/>
       <model type='virtio'/>
     </interface>

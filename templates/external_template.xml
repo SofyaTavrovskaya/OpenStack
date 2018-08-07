@@ -8,7 +8,7 @@
   <ip address='$EXTERNAL_NET_HOST_IP' netmask='$EXTERNAL_NET_MASK'>
     <dhcp>
       <range start='$EXTERNAL_NET.2' end='$EXTERNAL_NET.254'/>
-      <host mac='$MAC_VM1_EXT' name='$VM1_NAME' ip='$VM1_EXTERNAL_IP'/>
+      <host mac='$MAC_CONTROLLER_EXT' name='$CONTROLLER_NAME' ip='$CONTROLLER_EXTERNAL_IP'/>
     </dhcp>
   </ip>
 </network>

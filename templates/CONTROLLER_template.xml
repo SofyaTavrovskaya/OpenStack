@@ -1,7 +1,7 @@
 <domain type='${VM_VIRT_TYPE}'>
-  <name>vm1</name>
-  <memory unit='MiB'>${VM1_MB_RAM}</memory>
-  <vcpu placement='static'>${VM1_NUM_CPU}</vcpu>
+  <name>CONTROLLER</name>
+  <memory unit='MiB'>${CONTROLLER_MB_RAM}</memory>
+  <vcpu placement='static'>${CONTROLLER_NUM_CPU}</vcpu>
   <os>
     <type>${VM_TYPE}</type>
     <boot dev='hd'/>
@@ -9,17 +9,17 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='${VM1_HDD}'/>
+      <source file='${CONTROLLER_HDD}'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='${VM1_CONFIG_ISO}'/>
+      <source file='${CONTROLLER_CONFIG_ISO}'/>
       <target dev='hdc' bus='ide'/>
       <readonly/>
     </disk>
     <interface type='network'>
-      <mac address='${MAC_VM1_EXT}'/>
+      <mac address='${MAC_CONTROLLER_EXT}'/>
       <source network='${EXTERNAL_NET_NAME}'/>
       <model type='virtio'/>
     </interface>
@@ -27,7 +27,7 @@
       <source network='${INTERNAL_NET_NAME}'/>
       <model type='virtio'/>
       <protocol family='ipv4'>
-      <ip address="${VM1_INTERNAL_IP}" prefix="24"/>
+      <ip address="${CONTROLLER_INTERNAL_IP}" prefix="24"/>
       <route gateway="${INTERNAL_NET}.1"/>
       </protocol>
     </interface>

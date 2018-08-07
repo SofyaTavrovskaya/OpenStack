@@ -1,33 +1,33 @@
-<domain type='${VM_VIRT_TYPE}'>
-  <name>${VM2_NAME}</name>
-  <memory unit='MiB'>${VM2_MB_RAM}</memory>
-  <vcpu placement='static'>${VM2_NUM_CPU}</vcpu>
+<domain type='kvm'>
+  <name>COMPUTE</name>
+  <memory unit='MiB'>4096</memory>
+  <vcpu placement='static'>1</vcpu>
   <os>
-    <type>${VM_TYPE}</type>
+    <type>hvm</type>
     <boot dev='hd'/>
   </os>
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='${VM2_HDD}'/>
+      <source file='/var/lib/libvirt/images/vm2.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='${VM2_CONFIG_ISO}'/>
+      <source file='/var/lib/libvirt/images/config-vm2.iso'/>
       <target dev='hdc' bus='ide'/>
       <readonly/>
     </disk>
     <interface type='network'>
-      <source network='${INTERNAL_NET_NAME}'/>
+      <source network='internal'/>
       <model type='virtio'/>
         <protocol family='ipv4'>
-        <ip address="${VM2_INTERNAL_IP}" prefix="24"/>
+        <ip address="192.168.124.102" prefix="24"/>
         <route gateway="{INTERNAL_NET}.1"/>
         </protocol>
     </interface>
     <interface type='network'>
-      <source network='${MANAGEMENT_NET_NAME}'/>
+      <source network='management'/>
       <model type='virtio'/>
     </interface>
     <serial type='pty'>

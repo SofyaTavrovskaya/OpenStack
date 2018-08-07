@@ -1,0 +1,19 @@
+instance-id: 34cffdc0-0498-4248-8497-2150d61c073e
+hostname: ${CONTROLLER_NAME}
+local-hostname: ${CONTROLLER_NAME}
+network-interfaces: |
+  auto ${CONTROLLER_EXTERNAL_IF}
+  iface ${CONTROLLER_EXTERNAL_IF} inet dhcp
+  
+  auto ${CONTROLLER_INTERNAL_IF}
+  iface ${CONTROLLER_INTERNAL_IF} inet static
+  address ${CONTROLLER_INTERNAL_IP}
+  network ${INTERNAL_NET_IP}
+  netmask ${INTERNAL_NET_MASK}
+
+  auto ${CONTROLLER_MANAGEMENT_IF}
+  iface ${CONTROLLER_MANAGEMENT_IF} inet static
+  address ${CONTROLLER_MANAGEMENT_IP}
+  network ${MANAGEMENT_NET_IP}
+  netmask ${MANAGEMENT_NET_MASK}
+
