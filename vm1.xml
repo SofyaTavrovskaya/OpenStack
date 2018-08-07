@@ -1,0 +1,48 @@
+<domain type='kvm'>
+  <name>vm1</name>
+  <memory unit='MiB'>2048</memory>
+  <vcpu placement='static'>1</vcpu>
+  <os>
+    <type>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='/var/lib/libvirt/images/vm1.qcow2'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='/var/lib/libvirt/images/config-vm1.iso'/>
+      <target dev='hdc' bus='ide'/>
+      <readonly/>
+    </disk>
+    <interface type='network'>
+      <mac address='52:54:00:df:cd:05'/>
+      <source network='external'/>
+      <model type='virtio'/>
+    </interface>
+    <interface type='network'>
+      <source network='internal'/>
+      <model type='virtio'/>
+      <protocol family='ipv4'>
+      <ip address="192.168.124.101" prefix="24"/>
+      <route gateway="192.168.124.1"/>
+      </protocol>
+    </interface>
+    <interface type='network'>
+      <source network='management'/>
+      <model type='virtio'/>
+    </interface>
+    <serial type='pty'>
+      <source path='/dev/pts/0'/>
+      <target port='0'/>
+    </serial>
+    <console type='pty' tty='/dev/pts/0'>
+      <source path='/dev/pts/0'/>
+      <target type='serial' port='0'/>
+    </console>
+    <graphics type='vnc' port='-1' autoport='yes'/>
+  </devices>
+</domain>

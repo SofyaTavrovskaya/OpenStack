@@ -1,0 +1,14 @@
+#cloud-config
+chpasswd: { expire: False }
+password: qwerty
+runcmd:
+ - 'ip link add ${VXLAN_IF} type vxlan id ${VID} dev ${VM1_INTERNAL_IF} dstport 0'
+ - 'bridge fdb append to 00:00:00:00:00:00 dst ${VM2_INTERNAL_IP} dev ${VXLAN_IF}'
+ - 'ip addr add ${VM1_VXLAN_IP}/24 dev ${VXLAN_IF}'
+ - 'ip link set up dev ${VXLAN_IF}'
+ - 'sysctl net.ipv4.ip_forward=1'
+ - 'iptables -t nat -A POSTROUTING -o ${VM1_EXTERNAL_IF} -j MASQUERADE'
+ - 'iptables -A FORWARD -i ${VM1_INTERNAL_IF} -o ${VM1_EXTERNAL_IF} -j ACCEPT'
+ - 'iptables -A FORWARD -i ${VM1_EXTERNAL_IF} -o ${VM1_INTERNAL_IF} -j ACCEPT'
+
+
